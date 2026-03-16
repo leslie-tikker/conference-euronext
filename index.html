@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Leslie Cabanes — Tikker | Conférence Euronext</title>
+  <meta name="description" content="Leslie Cabanes, Founder & CEO de Tikker — carte de visite digitale">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg: #08080a;
+      --card-bg: #111114;
+      --card-border: rgba(255,255,255,0.06);
+      --text: #f0f0f2;
+      --text-secondary: #8a8a96;
+      --accent: #C9A84C;
+      --accent-soft: rgba(201,168,76,0.12);
+      --accent-hover: #DFC06A;
+      --link: #7B9FE0;
+      --divider: rgba(255,255,255,0.06);
+      --radius: 20px;
+    }
+
+    html { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; background: var(--bg); color: var(--text); }
+    body { min-height: 100dvh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; background: radial-gradient(ellipse at 50% 0%, rgba(201,168,76,0.06) 0%, transparent 60%), var(--bg); }
+
+    /* ===== Conference Badge ===== */
+    .badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: var(--accent-soft); border: 1px solid rgba(201,168,76,0.2);
+      color: var(--accent); font-size: 11px; font-weight: 600; letter-spacing: 0.8px; text-transform: uppercase;
+      padding: 6px 14px; border-radius: 100px; margin-bottom: 20px;
+      animation: fadeIn 0.6s ease;
+    }
+    .badge svg { width: 14px; height: 14px; fill: var(--accent); }
+
+    /* ===== Card ===== */
+    .card {
+      width: 100%; max-width: 400px;
+      background: var(--card-bg); border: 1px solid var(--card-border);
+      border-radius: var(--radius); overflow: hidden;
+      animation: slideUp 0.5s ease;
+    }
+
+    .card-header {
+      text-align: center; padding: 32px 24px 24px;
+      background: linear-gradient(180deg, rgba(201,168,76,0.04) 0%, transparent 100%);
+    }
+
+    .photo {
+      width: 96px; height: 96px; border-radius: 50%;
+      border: 2px solid rgba(201,168,76,0.3);
+      object-fit: cover; margin-bottom: 16px;
+      box-shadow: 0 0 30px rgba(201,168,76,0.1);
+    }
+
+    .name { font-size: 22px; font-weight: 700; letter-spacing: -0.3px; margin-bottom: 4px; }
+    .title-role { font-size: 13px; color: var(--text-secondary); font-weight: 400; margin-bottom: 2px; }
+    .company { font-size: 13px; color: var(--accent); font-weight: 600; letter-spacing: 0.5px; }
+
+    .divider { height: 1px; background: var(--divider); margin: 0 24px; }
+
+    /* ===== Contact Info ===== */
+    .contact-section { padding: 20px 24px; }
+    .contact-row {
+      display: flex; align-items: center; gap: 12px;
+      padding: 10px 0; text-decoration: none; color: var(--text);
+      transition: opacity 0.2s;
+    }
+    .contact-row:hover { opacity: 0.8; }
+    .contact-row:active { opacity: 0.6; }
+    .contact-icon {
+      width: 36px; height: 36px; border-radius: 10px;
+      background: rgba(255,255,255,0.04); border: 1px solid var(--card-border);
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .contact-icon svg { width: 16px; height: 16px; fill: var(--text-secondary); }
+    .contact-label { font-size: 10px; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 1px; }
+    .contact-value { font-size: 14px; font-weight: 500; }
+
+    /* ===== Social Links ===== */
+    .social-section { padding: 16px 24px 8px; }
+    .social-heading {
+      font-size: 10px; color: var(--text-secondary); text-transform: uppercase;
+      letter-spacing: 0.8px; font-weight: 600; margin-bottom: 12px;
+    }
+    .social-grid { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+    .social-link {
+      display: flex; align-items: center; gap: 8px;
+      background: rgba(255,255,255,0.03); border: 1px solid var(--card-border);
+      border-radius: 10px; padding: 8px 14px; text-decoration: none; color: var(--text);
+      font-size: 12px; font-weight: 500; transition: all 0.2s;
+    }
+    .social-link:hover { background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.1); }
+    .social-link:active { transform: scale(0.97); }
+    .social-link svg { width: 16px; height: 16px; fill: var(--text-secondary); flex-shrink: 0; }
+
+    /* ===== CTA Buttons ===== */
+    .cta-section { padding: 8px 24px 28px; display: flex; flex-direction: column; gap: 10px; }
+
+    .btn-primary {
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+      background: var(--accent); color: #0a0a0a;
+      border: none; border-radius: 12px; padding: 14px 20px;
+      font-family: inherit; font-size: 14px; font-weight: 600;
+      cursor: pointer; transition: all 0.2s; width: 100%;
+      letter-spacing: 0.2px;
+    }
+    .btn-primary:hover { background: var(--accent-hover); }
+    .btn-primary:active { transform: scale(0.98); }
+    .btn-primary svg { width: 18px; height: 18px; fill: #0a0a0a; }
+
+    .btn-secondary {
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+      background: transparent; color: var(--text);
+      border: 1px solid var(--card-border); border-radius: 12px; padding: 14px 20px;
+      font-family: inherit; font-size: 14px; font-weight: 500;
+      cursor: pointer; transition: all 0.2s; width: 100%;
+    }
+    .btn-secondary:hover { background: rgba(255,255,255,0.04); border-color: rgba(255,255,255,0.1); }
+    .btn-secondary:active { transform: scale(0.98); }
+    .btn-secondary svg { width: 18px; height: 18px; fill: var(--text-secondary); }
+
+    /* ===== Footer ===== */
+    .footer {
+      text-align: center; padding: 20px;
+      font-size: 11px; color: var(--text-secondary); letter-spacing: 0.3px;
+    }
+    .footer a { color: var(--accent); text-decoration: none; }
+
+    /* ===== QR View ===== */
+    .qr-view {
+      width: 100%; max-width: 400px; text-align: center;
+      animation: fadeIn 0.5s ease;
+    }
+    .qr-view .photo { width: 64px; height: 64px; margin-bottom: 12px; }
+    .qr-view .name { font-size: 18px; margin-bottom: 2px; }
+    .qr-view .title-role { margin-bottom: 20px; }
+
+    .qr-container {
+      background: #fff; border-radius: 20px; padding: 24px;
+      display: inline-block; margin-bottom: 20px;
+      box-shadow: 0 0 60px rgba(201,168,76,0.1);
+    }
+    .qr-container canvas, .qr-container img { display: block !important; }
+
+    .qr-hint {
+      font-size: 14px; color: var(--text-secondary); margin-bottom: 6px;
+    }
+    .qr-subhint {
+      font-size: 12px; color: var(--accent); font-weight: 500;
+      letter-spacing: 0.5px; text-transform: uppercase;
+    }
+
+    .view-toggle {
+      position: fixed; bottom: 24px; right: 24px;
+      width: 48px; height: 48px; border-radius: 50%;
+      background: var(--card-bg); border: 1px solid var(--card-border);
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; transition: all 0.2s; z-index: 10;
+    }
+    .view-toggle:hover { background: rgba(255,255,255,0.08); }
+    .view-toggle svg { width: 20px; height: 20px; fill: var(--text-secondary); }
+
+    /* ===== Toast ===== */
+    .toast {
+      position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%) translateY(20px);
+      background: var(--card-bg); border: 1px solid var(--accent);
+      color: var(--text); padding: 12px 20px; border-radius: 12px;
+      font-size: 13px; font-weight: 500; opacity: 0; transition: all 0.3s;
+      pointer-events: none; z-index: 20;
+    }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    /* ===== Animations ===== */
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+    .hidden { display: none !important; }
+  </style>
+</head>
+<body>
+
+  <!-- ===== CARD VIEW (visitors) ===== -->
+  <div id="card-view">
+    <div style="text-align:center;">
+      <div class="badge">
+        <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+        Rencontr&eacute; &agrave; la conf&eacute;rence Euronext
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <img class="photo" src="https://drive.google.com/uc?export=view&id=1RJAFq7mu5QLT6YVBaVpvuY3iq96tnSko" alt="Leslie Cabanes" />
+        <div class="name">Leslie Cabanes</div>
+        <div class="title-role">Founder & CEO</div>
+        <div class="company">TIKKER</div>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- Contact -->
+      <div class="contact-section">
+        <a class="contact-row" href="mailto:leslie@tikker.ai">
+          <div class="contact-icon">
+            <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+          </div>
+          <div>
+            <div class="contact-label">Email</div>
+            <div class="contact-value">leslie@tikker.ai</div>
+          </div>
+        </a>
+        <a class="contact-row" href="tel:+33650178612">
+          <div class="contact-icon">
+            <svg viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
+          </div>
+          <div>
+            <div class="contact-label">T&eacute;l&eacute;phone</div>
+            <div class="contact-value">+33 6 50 17 86 12</div>
+          </div>
+        </a>
+        <a class="contact-row" href="https://maps.google.com/?q=103+rue+de+la+Boetie+75008+Paris" target="_blank" rel="noopener">
+          <div class="contact-icon">
+            <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+          </div>
+          <div>
+            <div class="contact-label">Adresse</div>
+            <div class="contact-value">103 rue de la Bo&eacute;tie, 75008 Paris</div>
+          </div>
+        </a>
+        <a class="contact-row" href="https://tikker.ai" target="_blank" rel="noopener">
+          <div class="contact-icon">
+            <svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zm6.93 6h-2.95c-.32-1.25-.78-2.45-1.38-3.56 1.84.63 3.37 1.91 4.33 3.56zM12 4.04c.83 1.2 1.48 2.53 1.91 3.96h-3.82c.43-1.43 1.08-2.76 1.91-3.96zM4.26 14C4.1 13.36 4 12.69 4 12s.1-1.36.26-2h3.38c-.08.66-.14 1.32-.14 2s.06 1.34.14 2H4.26zm.82 2h2.95c.32 1.25.78 2.45 1.38 3.56-1.84-.63-3.37-1.9-4.33-3.56zm2.95-8H5.08c.96-1.66 2.49-2.93 4.33-3.56C8.81 5.55 8.35 6.75 8.03 8zM12 19.96c-.83-1.2-1.48-2.53-1.91-3.96h3.82c-.43 1.43-1.08 2.76-1.91 3.96zM14.34 14H9.66c-.09-.66-.16-1.32-.16-2s.07-1.35.16-2h4.68c.09.65.16 1.32.16 2s-.07 1.34-.16 2zm.25 5.56c.6-1.11 1.06-2.31 1.38-3.56h2.95c-.96 1.65-2.49 2.93-4.33 3.56zM16.36 14c.08-.66.14-1.32.14-2s-.06-1.34-.14-2h3.38c.16.64.26 1.31.26 2s-.1 1.36-.26 2h-3.38z"/></svg>
+          </div>
+          <div>
+            <div class="contact-label">Website</div>
+            <div class="contact-value">tikker.ai</div>
+          </div>
+        </a>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- Social Links -->
+      <div class="social-section">
+        <div class="social-heading">R&eacute;seaux personnels</div>
+        <div class="social-grid">
+          <a class="social-link" href="https://www.linkedin.com/in/lesliecabanes" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24"><path d="M19 3a2 2 0 012 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h14m-.5 15.5v-5.3a3.26 3.26 0 00-3.26-3.26c-.85 0-1.84.52-2.32 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 011.4 1.4v4.93h2.79M6.88 8.56a1.68 1.68 0 001.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 00-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/></svg>
+            LinkedIn
+          </a>
+          <a class="social-link" href="https://github.com/leslie-tikker" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24"><path d="M12 2A10 10 0 002 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.87 1.52 2.34 1.07 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33.85 0 1.71.11 2.5.33 1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0012 2z"/></svg>
+            GitHub
+          </a>
+          <a class="social-link" href="https://x.com/cabanesleslie" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+            X
+          </a>
+        </div>
+
+        <div class="social-heading">Tikker</div>
+        <div class="social-grid">
+          <a class="social-link" href="https://www.linkedin.com/company/tikker-broker" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24"><path d="M19 3a2 2 0 012 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h14m-.5 15.5v-5.3a3.26 3.26 0 00-3.26-3.26c-.85 0-1.84.52-2.32 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 011.4 1.4v4.93h2.79M6.88 8.56a1.68 1.68 0 001.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 00-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/></svg>
+            LinkedIn
+          </a>
+          <a class="social-link" href="https://github.com/Tikker-broker" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24"><path d="M12 2A10 10 0 002 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.87 1.52 2.34 1.07 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33.85 0 1.71.11 2.5.33 1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0012 2z"/></svg>
+            GitHub
+          </a>
+          <a class="social-link" href="https://huggingface.co/tikker-ai" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="1.5"/><text x="12" y="16" text-anchor="middle" font-size="12">&#x1F917;</text></svg>
+            HuggingFace
+          </a>
+          <a class="social-link" href="https://twitter.com/tikker_broker" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+            X
+          </a>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- CTA Buttons -->
+      <div class="cta-section">
+        <button class="btn-primary" onclick="downloadVCard()">
+          <svg viewBox="0 0 24 24"><path d="M15 12h2c0-2.76-2.24-5-5-5v2c1.66 0 3 1.34 3 3zm4 0h2c0-4.97-4.03-9-9-9v2c3.87 0 7 3.13 7 7zm1 3.5c-1.25 0-2.45-.2-3.57-.57-.35-.11-.74-.03-1.02.24l-2.2 2.2c-2.83-1.44-5.15-3.75-6.59-6.59l2.2-2.2c.28-.28.36-.67.25-1.02C8.7 6.45 8.5 5.25 8.5 4c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1 0 9.39 7.61 17 17 17 .55 0 1-.45 1-1v-3.5c0-.55-.45-1-1-1z"/></svg>
+          Ajouter au carnet d'adresse
+        </button>
+        <button class="btn-secondary" onclick="shareMyContact()">
+          <svg viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92-1.31-2.92-2.92-2.92z" fill="currentColor"/></svg>
+          Envoyez-moi vos coordonn&eacute;es
+        </button>
+      </div>
+    </div>
+
+    <div class="footer">
+      <a href="https://tikker.ai">tikker.ai</a> &mdash; AI Broker for Institutional Execution
+    </div>
+  </div>
+
+  <!-- ===== QR VIEW (for Leslie to show) ===== -->
+  <div id="qr-view" class="hidden">
+    <div class="qr-view">
+      <img class="photo" src="https://drive.google.com/uc?export=view&id=1RJAFq7mu5QLT6YVBaVpvuY3iq96tnSko" alt="Leslie Cabanes" />
+      <div class="name">Leslie Cabanes</div>
+      <div class="title-role">Founder & CEO &mdash; Tikker</div>
+
+      <div class="qr-container">
+        <div id="qrcode"></div>
+      </div>
+
+      <div class="qr-hint">Scannez pour me contacter</div>
+      <div class="qr-subhint">Conf&eacute;rence Euronext</div>
+    </div>
+  </div>
+
+  <!-- View Toggle Button -->
+  <button class="view-toggle" onclick="toggleView()" title="Basculer QR / Carte">
+    <svg id="toggle-icon-qr" viewBox="0 0 24 24"><path d="M3 11h8V3H3v8zm2-6h4v4H5V5zm8-2v8h8V3h-8zm6 6h-4V5h4v4zM3 21h8v-8H3v8zm2-6h4v4H5v-4zm13-2h-2v2h2v-2zm0 4h-2v2h2v-2zm-4-4h-2v2h2v-2zm4 4h2v2h-2v-2zm0-4h2v2h-2v-2zm-4 4h-2v2h2v-2zm0 4h2v-2h-2v2zm-2-2h-2v2h2v-2z"/></svg>
+    <svg id="toggle-icon-card" class="hidden" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 14H4V6h16v12zM4 0h16v2H4zM4 22h16v2H4z"/></svg>
+  </button>
+
+  <!-- Toast -->
+  <div class="toast" id="toast"></div>
+
+  <script>
+    // ===== vCard Data =====
+    const VCARD = [
+      'BEGIN:VCARD',
+      'VERSION:3.0',
+      'N:Cabanes;Leslie;;;',
+      'FN:Leslie Cabanes',
+      'ORG:Tikker',
+      'TITLE:Founder & CEO',
+      'TEL;TYPE=CELL:+33650178612',
+      'EMAIL;TYPE=INTERNET:leslie@tikker.ai',
+      'URL:https://tikker.ai',
+      'ADR;TYPE=WORK:;;103 rue de la Boétie;Paris;;75008;France',
+      'X-SOCIALPROFILE;TYPE=linkedin:https://www.linkedin.com/in/lesliecabanes',
+      'X-SOCIALPROFILE;TYPE=twitter:https://x.com/cabanesleslie',
+      'X-SOCIALPROFILE;TYPE=github:https://github.com/leslie-tikker',
+      'NOTE:Rencontrée à la conférence Euronext',
+      'END:VCARD'
+    ].join('\r\n');
+
+    // ===== Download vCard =====
+    function downloadVCard() {
+      const blob = new Blob([VCARD], { type: 'text/vcard;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'Leslie-Cabanes-Tikker.vcf';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      showToast('Contact téléchargé !');
+    }
+
+    // ===== Share Contact Request =====
+    function shareMyContact() {
+      const subject = encodeURIComponent('Contact — Conférence Euronext');
+      const body = encodeURIComponent(
+        'Bonjour Leslie,\n\n' +
+        'Suite à notre rencontre à la conférence Euronext, voici mes coordonnées :\n\n' +
+        'Nom : \n' +
+        'Société : \n' +
+        'Fonction : \n' +
+        'Téléphone : \n' +
+        'Email : \n' +
+        'LinkedIn : \n\n' +
+        'Au plaisir d\'échanger,\n'
+      );
+
+      if (navigator.share) {
+        navigator.share({
+          title: 'Contact — Conférence Euronext',
+          text: 'Envoyez vos coordonnées à Leslie Cabanes (Tikker)',
+          url: `mailto:leslie@tikker.ai?subject=${subject}&body=${body}`
+        }).catch(() => {
+          window.location.href = `mailto:leslie@tikker.ai?subject=${subject}&body=${body}`;
+        });
+      } else {
+        window.location.href = `mailto:leslie@tikker.ai?subject=${subject}&body=${body}`;
+      }
+    }
+
+    // ===== View Toggle =====
+    let currentView = 'card';
+    function toggleView() {
+      const cardView = document.getElementById('card-view');
+      const qrView = document.getElementById('qr-view');
+      const iconQr = document.getElementById('toggle-icon-qr');
+      const iconCard = document.getElementById('toggle-icon-card');
+
+      if (currentView === 'card') {
+        cardView.classList.add('hidden');
+        qrView.classList.remove('hidden');
+        iconQr.classList.add('hidden');
+        iconCard.classList.remove('hidden');
+        currentView = 'qr';
+      } else {
+        qrView.classList.add('hidden');
+        cardView.classList.remove('hidden');
+        iconCard.classList.add('hidden');
+        iconQr.classList.remove('hidden');
+        currentView = 'card';
+      }
+    }
+
+    // ===== Toast =====
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      toast.textContent = msg;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2500);
+    }
+
+    // ===== QR Code Generation =====
+    function generateQR() {
+      const container = document.getElementById('qrcode');
+      new QRCode(container, {
+        text: VCARD,
+        width: 260,
+        height: 260,
+        colorDark: '#0a0a0a',
+        colorLight: '#ffffff',
+        correctLevel: QRCode.CorrectLevel.M
+      });
+    }
+
+    // ===== Init =====
+    window.addEventListener('DOMContentLoaded', () => {
+      generateQR();
+      // Auto-show QR view if #qr hash
+      if (window.location.hash === '#qr') {
+        toggleView();
+      }
+    });
+  </script>
+</body>
+</html>
